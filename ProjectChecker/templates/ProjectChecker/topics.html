@@ -1,0 +1,126 @@
+{% extends "ProjectChecker/base.html" %}
+{% block title %}Sessions{% endblock  %}
+{% block search_url %}{% url 'topics' pk %}{% endblock search_url %}
+{% block search_text %}Search for Topic...{% endblock search_text %}
+{% block home_type %}
+{% if user.status == 'lecturer' %}
+{% url 'lecturer_dashboard' %}
+{% else %}
+{% url 'student_dashboard' %}
+{% endif %}
+{% endblock home_type %}
+{% block project %}
+  {% if user.status == 'lecturer' %}
+  
+  {% else %}
+  Upload Project
+  {% endif %}
+{% endblock project %}
+
+{% block content %}
+
+<section>
+  
+  
+    <h3 class="oneOne">TOPICS</h3>
+    <!-- This is the topics name -->
+    <section class="oneOne">
+
+    {% if user.status == 'student' %}
+
+      {% for project in projects %}
+        <div class="oneOne">{{project.title}}
+          {% if project.status == 'pending' %}
+          <span id="pending"><a href="#">⌛</a></span>
+          {% elif project.status == 'approved' %}
+          <span id="accepted">&check;</span>
+          {% else %}
+          <span id="declined"><a href="">✗</a></span>
+          {% endif %}  
+        </div>
+      {% endfor %}
+
+    {% elif  user.status == 'lecturer' %}
+    {% for project in pending_projects %}
+    <div class="project-container">
+      <div class="oneOne">{{ project.title }}</div>
+      <div class="action-buttons">
+        <span id="accepted"><a href="{% url 'approve_project' project.id %}">✓</a></span>
+        <span id="declined"><a href="{% url 'decline_project' project.id %}">✗</a></span>
+      </div>
+    </div>
+    {% endfor %}
+
+    {% else %}
+
+      {% for project in projects %}
+      <div class="oneOne">{{project.title}}
+        {% if project.status == 'pending' %}
+        <span id="pending"><a href="#">⌛</a></span>
+        {% elif project.status == 'approved' %}
+        <span id="accepted" class="accept">&check;</span>
+        {% else %}
+        <span id="declined"><a href="">✗</a></span>
+        {% endif %}  
+      </div>
+      {% endfor %}
+
+    {% endif %}
+    
+</section> <br>
+
+<style>
+  .project-container {
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  .oneOne {
+    text-decoration: none;
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+
+  .action-buttons {
+    text-decoration: none;
+    display: flex;
+    gap: 10px;
+  }
+
+  .action-buttons a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  #accepted {
+    text-decoration: none;
+    color: green;
+    background-color: #5cb85c; /* Light green background */
+  }
+
+  #accepted:hover {
+    text-decoration: none;
+    background-color: #a5d6a7; /* Darker green on hover */
+  }
+
+  #declined {
+    text-decoration: none;
+    color: red;
+    background-color: #ff0000; /* Light red background */
+  }
+
+  #declined:hover {
+    text-decoration: none;
+    background-color: #ef9a9a; /* Darker red on hover */
+  }
+</style>
+<small class=""><u><a href='{{request.META.HTTP_REFERER}}'>Back</a></u></small>
+
+{% endblock  %}

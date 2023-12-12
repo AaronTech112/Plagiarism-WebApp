@@ -1,0 +1,38 @@
+{% extends "ProjectChecker/base.html" %}
+{% block title %}Sessions{% endblock  %}
+{% block search_url %}{% url 'sessions' pk %}{% endblock search_url %}
+{% block search_text %}Search for a Session...{% endblock search_text %}
+{% block home_type %}
+{% if user.status == 'lecturer' %}
+{% url 'lecturer_dashboard' %}
+{% else %}
+{% url 'student_dashboard' %}
+{% endif %}
+{% endblock home_type %}
+{% block project %}
+  {% if user.status == 'lecturer' %}
+  
+  {% else %}
+  Upload Project
+  {% endif %}
+{% endblock project %}
+
+{% block content %}
+<section>
+  
+  <h3 class="">SESSIONS</h3>
+  <section class="">
+    <a href="{% url 'approved_projects' pk=first %}" style='text-decoration:none; color:black;'><div class="cyberOne">2022/2023</div></a>
+    <a href="{% url 'approved_projects' pk=second %}" style='text-decoration:none; color:black;'><div class="cyberOne">2021/2022</div></a>
+    <a href="{% url 'approved_projects' pk=third %}" style='text-decoration:none; color:black;'><div class="cyberOne">2020/2021</div></a>
+    <a href="{% url 'approved_projects' pk=forth %}" style='text-decoration:none; color:black;'><div class="cyberOne">2019/2020</div></a>
+    <a href="{% url 'approved_projects' pk=fifth %}" style='text-decoration:none; color:black;'><div class="cyberOne">2018/2019</div></a>
+  </section> <br>
+  {% if user.status == 'student' %}
+  <small class=""><u><a href="{% url 'student_dashboard' %}">Back</a></u></small>
+  {% else %}
+  <small class=""><u><a href="{% url 'lecturer_dashboard' %}">Back</a></u></small>
+  {% endif %}
+
+</section>   
+{% endblock content %}

@@ -1,0 +1,151 @@
+{% extends "ProjectChecker/base.html" %}
+{% load static %}
+{% block title %}{{url_action}}{% endblock  %}
+
+{% block search_url %}
+
+{% if url_action == 'approved_projects' %}
+  {% url 'approved_projects' pk %}
+{% elif url_action == 'rejected_projects'%}
+  {% url 'rejected_projects' pk %}
+{% else %} 
+  {% url 'pending_projects' pk %}
+{% endif %}
+
+{% endblock search_url %}
+
+{% block search_text %}Search for Topic...{% endblock search_text %}
+{% block css %}{% static '/css/approved.css'%}{% endblock css %}
+
+{% block home_type %}
+
+{% if user.status == 'lecturer' %}
+  {% url 'lecturer_dashboard' %}
+{% else %}
+  {% url 'student_dashboard' %}
+{% endif %}
+
+{% endblock home_type %}
+
+{% block project %}
+  {% if user.status == 'lecturer' %}
+  
+  {% else %}
+  Upload Project
+  {% endif %}
+{% endblock project %}
+
+{% block content %}
+
+      <!-- Beginning of the third column -->
+      <section class="columnThree" id="columnThree">
+        {% if url_action == 'approved_projects' %}
+        <h3 class="topics">APPROVED TOPICS<span id="accepted">&check;</span></h3>
+        {% elif url_action == 'rejected_projects' %}
+        <h3 class="topics">REJECTED TOPICS<a>✗</a></h3>
+        {% else %}
+        <h3 class="topics">PENDING TOPICS <a>⌛</a></h3>
+        {% endif %}
+        <!-- This is the topics name -->
+      {% if user.status == 'student' %}
+
+        <section class="zero hidden filter">
+          <a class="fltBut appr" href="{% url 'approved_projects' pk %}"
+            ><button>Approved</button></a
+          >
+          <a class="fltBut rejc" href="{% url 'rejected_projects' pk %}"
+            ><button>Rejected</button></a
+          >
+          <a class="fltBut pend" href="{% url 'pending_projects' pk %}"
+            ><button>Pending</button></a
+          >
+        </section>
+        <section class="one hidden">
+          {% for project in approved_projects %}
+          <div class="oneOne" ><a href="{% url 'project_detail' project.id %}">{{project.title}}</a>
+            {% if project.status == 'pending' %}
+            <span id="pending"><a href="{% url 'project_detail' project.id %}">⌛</a></span>
+            {% elif project.status == 'approved' %}
+            <span id="accepted">&check;</span>
+            {% else %}
+            <span id="declined"><a href="{% url 'project_detail' project.id %}">✗</a></span>
+            {% endif %} 
+          </div>
+         {% endfor %}
+        </section>
+        
+        {% elif  user.status == 'lecturer' %}
+        <section class="zero hidden filter">
+          <a class="fltBut appr" href="{% url 'approved_projects' pk %}"
+            ><button>Approved</button></a
+          >
+          <a class="fltBut rejc" href="{% url 'rejected_projects' pk %}"
+            ><button>Rejected</button></a
+          >
+          <a class="fltBut pend" href="{% url 'pending_projects' pk %}" title="Pending Your Approval"
+            ><button>Pending</button></a 
+          >
+        </section>
+        <section class="one hidden">
+          {% for project in approved_projects %}
+
+          {% if url_action == 'approved_projects' %} 
+
+          <div class="oneOne" ><a style="text-decoration: none;" href="{% url 'project_detail' project.id %}">{{project.title}}</a>
+
+            <span id="accepted">&check;</span>
+
+          </div>
+
+          {% elif url_action == 'rejected_projects' %}
+
+          <div class="oneOne" ><a style="text-decoration: none;" href="{% url 'project_detail' project.id %}">{{project.title}}</a>
+
+            <span id="declined">✗</span>
+            
+         
+
+          {% else %}
+          <div class="oneOne" ><a title="VIEW Project" style="text-decoration: none;" href="{% url 'project_detail' project.id %}">{{project.title}}</a> | 
+              <span id="accepted"><a title="APPROVE Project" style="text-decoration:none; color:white; margin-left: 5px;"href="{% url 'approve_project' project.id %}">✓</a></span> |
+              <span id="declined"><a title="REJECT Project" style="text-decoration:none; color:white; margin-left: 5px;" href="{% url 'decline_project' project.id %}">✗</a></span> 
+
+          {% endif %}
+
+          {% endfor %}
+        </section>
+
+        {% else %}
+
+        <section class="zero hidden filter">
+          <a class="fltBut appr" href="{% url 'approved_projects' pk %}"
+            ><button>Approved</button></a
+          >
+          <a class="fltBut rejc" href="{% url 'rejected_projects' pk %}"
+            ><button>Rejected</button></a
+          >
+          <a class="fltBut pend" href="{% url 'pending_projects' pk %}"
+            ><button>Pending</button></a
+          >
+        </section>
+        <section class="one hidden">
+          {% for project in approved_projects %}
+          <div class="oneOne" ><a href="{% url 'project_detail' project.id %}">{{project.title}}</a>
+            {% if project.status == 'pending' %}
+            <span id="pending"><a href="{% url 'project_detail' project.id %}">⌛</a></span>
+            {% elif project.status == 'approved' %}
+            <span id="accepted">&check;</span>
+            {% else %}
+            <span id="declined"><a href="{% url 'project_detail' project.id %}">✗</a></span>
+            {% endif %} 
+          </div>
+         {% endfor %}
+        </section>
+
+      {% endif %}
+        
+      </section>
+
+
+
+{% endblock content %}

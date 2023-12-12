@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static '/css/profile.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            {% if user.status == 'student' %}
+            <a href="{% url 'student_dashboard'%}"><img src="{% static '/img/logo.png'%}" alt=""></a>
+            {% else %}
+            <a href="{% url 'lecturer_dashboard'%}"><img src="{% static '/img/logo.png'%}" alt=""></a>
+            {% endif %}   
+        </div>
+      
+        <div class="topNav" id="myTopNav">
+            <a class="topNavLinks" href="{% url 'profile'%}">{{user.username}}</a>
+            <a class="topNavLinks" href="{% url 'upload_project' %}">
+                {% if user.status == 'student' %}
+                Upload a Project
+                {% else %}
+                
+                {% endif %}
+            </a>
+            {% if user.status == 'student' %}
+            <a class="topNavLinks" href="{% url 'student_dashboard' %}">Home</a>
+            {% else %}
+            <a class="topNavLinks" href="{% url 'lecturer_dashboard' %}">Home</a>
+            {% endif %}
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+          </a>
+        </div>
+      </header>
+
+    <div class="container">
+        <div class="profile">
+            <img src="{{user.profile_pic.url}}" alt="User Avatar">
+            <h1>{{user.fullname}}</h1>
+            <p>{{user.email}}</p> <br>
+            <form action = "", method = "POST", enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <p style="color:red; font-size:15px;"> <br>Invalid Details</p><span class="main-heading " style="color:red; font-size:15px;">{{form.errors}} </span>
+                {% else %} 
+                    <span class="main-heading "><span class="highlight-text">
+                {% endif %}</span></span>
+                <div class="input-container">
+                    <input type="text" id="username" name="username" placeholder="Edit Username" value="{{ user.username }}">
+                </div>
+            
+                <div class="input-container">
+                    <input type="text" id="fullname" name="fullname" placeholder="Edit Full Name" value="{{ user.fullname }}">
+                </div>
+            
+                <div class="input-container">
+                    <input type="email" id="email" name="email" placeholder="Edit Email" value="{{ user.email }}">
+                </div>
+            
+                <div class="input-container">
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="Edit Phone Number" value="{{ user.phone_number }}">
+                </div>
+                
+                <div class="input-container">
+                    <select id="gender" name="gender">
+                        <option value="male" {% if user.gender == 'male' %}selected{% endif %}>Male</option>
+                        <option value="female" {% if user.gender == 'female' %}selected{% endif %}>Female</option>
+                        <option value="other" {% if user.gender == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                {{form.profile_pic}}
+
+                <div class="buttons">
+                    <button  type="submit">Save Changes</button>
+                    <button><a style= "color:white; text-decoration:none;"href="{% url 'logout_user' %}">Logout</a></button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    
+    <style>
+        .profile {
+            text-align: center;
+            margin: 20px;
+        }
+    
+        img {
+            border-radius: 50%;
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    
+        h1, p {
+            margin: 10px 0;
+            color: #333; /* You can change the color to your preference */
+        }
+    
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+    
+        input[type="text"], input[type="email"], input[type="tel"], input[type="file"], select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+    
+        label {
+            font-weight: normal;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555; /* Label color */
+        }
+    </style>
+
+
+
+    <script src="{% static '/js/script.js'%}"></script>
+</body>
+
+</html>

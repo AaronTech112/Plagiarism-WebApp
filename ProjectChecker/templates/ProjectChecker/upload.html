@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Project</title>
+    <link rel="stylesheet" href="{%  static '/css/upload.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+        <a href="{% url 'student_dashboard'%}"><img src="{% static '/img/logo.png'%}" alt=""></a>
+    </div>
+  
+    <div class="topNav" id="myTopNav">
+      <a class="topNavLinks" href="{% url 'profile'%}">{{user.username}}</a>
+      <a class="topNavLinks" href="{% url 'upload_project' %}">Upload a Project</a>
+      <a class="topNavLinks" href="{% url 'student_dashboard' %}">Home</a>
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars"></i>
+    </a>
+  </div>
+  </header>
+  {% if user.status == 'lecturer' %}
+  <main class="container">
+    <h2 style="color:red;">Sorry Only Students can upload projects</h2>
+  <small> <a href = "{% url 'lecturer_dashboard' %}">Go Back</a> </small>
+  </main>
+  {% else %}
+  {% if upload_error %}
+  <main class="container">
+    <h2 style="color:red;">{{upload_error}}</h2>
+    <small style="text-align:center; justify-content:center;"> <a href = "{% url 'upload_project' %}">Try Again</a> </small>
+  </main>
+  {% else %}
+
+  <main class="container">
+    <h2>Upload Project</h2>
+    <form method= 'POST' action = '' enctype="multipart/form-data">
+      {% csrf_token %}
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="body">Body of Content:</label>
+        <textarea id="body" name="content" rows="4" required></textarea>
+
+        <label for="dropdown">Department/Category:</label>
+        <select id="dropdown" name="department">
+            <option value="{{request.user.department}}">{{request.user.department}}</option>
+        </select>
+
+        <label for="dropdown">Session</label>
+        <select id="dropdown" name="session">
+            <option value="2018/2019">2018/2019</option>
+            <option value="2019/2020">2019/2020</option>
+            <option value="2020/2021">2020/2021</option>
+            <option value="2021/2022">2021/2022</option>
+            <option value="2022/2023">2022/2023</option>
+            <option value="2023/2024">2023/2024</option>
+        </select>
+
+        <input type="submit" value="Upload">
+    </form>
+  </main>
+  {% endif %}
+  {% endif %}
+  
+
+</body>
+</html>

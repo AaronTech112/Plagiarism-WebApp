@@ -1,0 +1,56 @@
+{% extends "ProjectChecker/base.html" %}
+{% load static %}
+{% block title %}{{url_action}}{% endblock title%}
+
+{% block css %}{% static '/css/details.css'%}{% endblock css %}
+
+{% block home_type %}
+
+{% if user.status == 'lecturer' %}
+  {% url 'lecturer_dashboard' %}
+{% else %}
+  {% url 'student_dashboard' %}
+{% endif %}
+
+{% endblock home_type %}
+
+{% block project %}
+  {% if user.status == 'lecturer' %}
+  
+  {% else %}
+  Upload Project
+  {% endif %}
+{% endblock project %}
+
+    <main {% block main %} class="container" {% endblock main %}>
+      {% block content %} 
+      <h2>Project Details</h2>
+      <section>
+        
+        <label class="label" for="title">Title:</label>
+        <div class="detail" id="title" name="title" required>{{project.title}}</div>
+
+        <label for="body">Body/Content:</label>
+        <div class="detail" id="title" name="title" required>
+          {{project.content}}
+        </div>
+
+        <label for="name">Author/Name:</label>
+        <div class="detail" id="title" name="title" required>{{project.author.fullname}}</div>
+
+        <label for="dropdown">Department:</label>
+        <div class="detail" id="title" name="title" required>{{project.department.name}}</div>
+        
+        <label for="dropdown">Matric Number:</label>
+        <div class="detail" id="title" name="title" required>{{project.author.matric_number}}</div>
+
+        <label for="session">Session:</label>
+        <div class="detail" id="title" required>{{project.session}}</div>
+
+        <label for="session">Email:</label>
+        <div class="detail" id="title" required>{{project.author.email}}</div>
+
+        <input type="button" value="Download" />
+      </section>
+    </main>
+{% endblock content %}

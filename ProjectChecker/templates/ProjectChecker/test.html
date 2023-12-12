@@ -1,0 +1,112 @@
+{% extends "ProjectChecker/base.html" %}
+{% block title %}Sessions{% endblock  %}
+{% block search_url %}{% url 'topics' pk %}{% endblock search_url %}
+{% block search_text %}Search for Topic...{% endblock search_text %}
+{% block home_type %}
+{% if user.status == 'lecturer' %}
+{% url 'lecturer_dashboard' %}
+{% else %}
+{% url 'student_dashboard' %}
+{% endif %}
+{% endblock home_type %}
+
+{% block content %}
+
+<section>
+  
+  
+    <h3 class="oneOne">TOPICS</h3>
+    <!-- This is the topics name -->
+    <section class="oneOne">
+
+    {% if user.status == 'student' %}
+
+      {% for project in projects %}
+        <div class="oneOne">{{project.title}}
+          {% if project.status == 'pending' %}
+          <span id="pending">....</span>
+          {% elif project.status == 'approved' %}
+          <span id="accepted">&check;</span>
+          {% else %}
+          <span id="declined"> &#x2717;</span>
+          {% endif %}  
+        </div>
+      {% endfor %}
+
+    {% elif  user.status == 'lecturer' %}
+    {% for project in pending_projects %}
+    <div class="project-container">
+      <div class="oneOne">{{ project.title }}</div>
+      <div class="action-buttons">
+        <span id="accepted"><a id="accepted-button" href="#">✓</a></span>
+        <span id="declined"><a id="declined-button" href="#">✗</a></span>
+      </div>
+    </div>
+    {% endfor %}
+
+    {% else %}
+
+      {% for project in projects %}
+      <div class="oneOne">{{project.title}}
+        {% if project.status == 'pending' %}
+        <span id="pending">....</span>
+        {% elif project.status == 'approved' %}
+        <span id="accepted" class="accept">&check;</span>
+        {% else %}
+        <span id="declined" class="decline"> &#x2717;</span>
+        {% endif %}  
+      </div>
+      {% endfor %}
+
+    {% endif %}
+    
+</section> <br>
+
+<style>
+    .project-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+  
+    .oneOne {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+  
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+  
+    .action-buttons a {
+      text-decoration: none !important; /* Add !important to override other styles */
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+  
+    #accepted-button {
+      color: green;
+      background-color: #c8e6c9; /* Light green background */
+    }
+  
+    #accepted-button:hover {
+      background-color: #a5d6a7; /* Darker green on hover */
+    }
+  
+    #declined-button {
+      color: red;
+      background-color: #ffcdd2; /* Light red background */
+    }
+  
+    #declined-button:hover {
+      background-color: #ef9a9a; /* Darker red on hover */
+    }
+  </style>
+<small class=""><u><a href='{{request.META.HTTP_REFERER}}'>Back</a></u></small>
+
+{% endblock  %}

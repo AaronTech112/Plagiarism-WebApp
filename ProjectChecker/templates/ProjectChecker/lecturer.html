@@ -1,0 +1,20 @@
+{% extends "ProjectChecker/base.html" %}
+{% load static %}
+{% block title %} Dashboard {% endblock %}
+{% block search_url %}{% url 'lecturer_dashboard' %}{% endblock search_url %}
+{% block search_text %}Search for a Department...{% endblock search_text %}
+{% block project %}{% endblock project %}
+{% block home_type %}{% url 'lecturer_dashboard' %}{% endblock home_type %}
+
+    {% block content %}
+          
+    <section class="columnOne" id="columnOne">
+      <h3 id="colOneHead">DEPARTMENTS</h3>
+      {% for departments in department  %}
+      <a href= "{% url 'sessions' departments.id %}" style='text-decoration:none; color:black;'> <div class="rowOne">{{departments.name}}</div></a>
+      {% endfor %}
+    </section>
+
+    {%endblock%}
+</body>
+</html>
